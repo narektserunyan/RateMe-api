@@ -14,14 +14,14 @@ const database_1 = require("../config/database");
 const createUsersTable = () => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     yield db.exec(`
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            uid TEXT NOT NULL UNIQUE,
-            email TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            password TEXT NOT NULL,
-            imagePath TEXT NOT NULL
-        )
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        uid TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL UNIQUE,
+        name TEXT NOT NULL,
+        password TEXT NOT NULL,
+        imagePath TEXT NOT NULL
+      )
     `);
 });
 exports.createUsersTable = createUsersTable;

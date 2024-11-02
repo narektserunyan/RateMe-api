@@ -17,7 +17,7 @@ const createUserFollowerTable = () => __awaiter(void 0, void 0, void 0, function
         CREATE TABLE IF NOT EXISTS user_follower (
             uid INTEGER NOT NULL,
             uid_follower INTEGER NOT NULL,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP,  -- Automatically set the creation date
+            created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the creation date
 
             FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE,
             FOREIGN KEY (uid_follower) REFERENCES users(uid) ON DELETE CASCADE,
@@ -26,32 +26,33 @@ const createUserFollowerTable = () => __awaiter(void 0, void 0, void 0, function
     `);
 });
 exports.createUserFollowerTable = createUserFollowerTable;
-const addUsersFollower = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, uid_follower }) {
+const addUsersFollower = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, uid_follower, }) {
     const db = yield (0, database_1.openDB)();
     yield db.run(`
-        INSERT INTO user_follower ( uid, uid_follower)
-        VALUES (?, ?)
-    `, [uid, uid_follower]);
+      INSERT INTO user_follower (uid, uid_follower)
+      VALUES ($1, $2)
+      ON CONFLICT (uid, uid_follower) DO NOTHING  -- Prevents duplicate entries
+      `, [uid, uid_follower]);
 });
 exports.addUsersFollower = addUsersFollower;
 const getFollowingsForUID = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     return db.all(`
-      SELECT users.email, users.name, users.uid, users.imagePath
-      FROM users 
-      INNER JOIN user_follower ON users.uid = user_follower.uid_follower 
-      WHERE user_follower.uid = ?
-    `, [uid]);
+    SELECT users.email, users.name, users.uid, users.imagePath
+    FROM users 
+    INNER JOIN user_follower ON users.uid = user_follower.uid_follower 
+    WHERE user_follower.uid = $1
+  `, [uid]);
 });
 exports.getFollowingsForUID = getFollowingsForUID;
 const getFollowersForUID = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     return db.all(`
-      SELECT users.email, users.uid, users.imagePath
-      FROM users 
-      INNER JOIN user_follower ON users.uid = user_follower.uid
-      WHERE user_follower.uid_follower = ?
-    `, [uid]);
+    SELECT users.email, users.uid, users.imagePath
+    FROM users 
+    INNER JOIN user_follower ON users.uid = user_follower.uid
+    WHERE user_follower.uid_follower = $1
+  `, [uid]);
 });
 exports.getFollowersForUID = getFollowersForUID;
 //# sourceMappingURL=userFollower.js.map

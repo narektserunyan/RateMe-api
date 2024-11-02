@@ -8,22 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.openDB = void 0;
+const { Pool } = require('pg');
+require('dotenv').config();
+const pool = new Pool({
+    host: process.env.PG_HOST,
+    port: process.env.PG_PORT,
+    user: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    database: process.env.PG_DATABASE,
+});
+const openDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const client = yield pool.connect();
+    return client;
+});
 exports.openDB = openDB;
-const sqlite3_1 = __importDefault(require("sqlite3"));
-const sqlite_1 = require("sqlite");
-// Function to initialize and return a database connection
-function openDB() {
-    return __awaiter(this, void 0, void 0, function* () {
-        // Open the database
-        const db = yield (0, sqlite_1.open)({
-            filename: './database.db',
-            driver: sqlite3_1.default.Database
-        });
-        return db;
-    });
-}
 //# sourceMappingURL=database.js.map

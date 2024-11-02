@@ -3,18 +3,18 @@ import { openDB } from '../config/database';
 export const createUsersTable = async (): Promise<void> => {
   const db = await openDB();
   await db.exec(`
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            uid TEXT NOT NULL UNIQUE,
-            email TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            password TEXT NOT NULL,
-            imagePath TEXT NOT NULL
-        )
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        uid TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL UNIQUE,
+        name TEXT NOT NULL,
+        password TEXT NOT NULL,
+        imagePath TEXT NOT NULL
+      )
     `);
 };
 
-interface User {
+export interface User {
   uid: string;
   email: string;
   name: string;

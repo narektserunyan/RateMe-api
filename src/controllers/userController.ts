@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
-import { insertUser, getUser, findUsers } from '../models/user';
+import { insertUser, getUser, findUsers, User } from '../models/user';
+import { Product } from '../models/products';
 import {
   getFollowersForUID,
   getFollowingsForUID
 } from '../models/userFollower';
 import { getProductsByUID, getUserProductByCodeForUID } from '../models/userProduct';
-
-import fs from 'fs';
 
 export const createUser = async (
   req: Request,
@@ -95,14 +94,14 @@ export const getDashbord = async (
     return;
   }
   try {
-    const user = await getUser(uid);
+    const user: User = await getUser(uid);
     if (user) {
-      const followings = await getFollowingsForUID(uid);
+      const followings: [User] = await getFollowingsForUID(uid);
 
       const productsOfFollowings = (
         await Promise.all(
           followings.map(async (following) => {
-            const products = await getProductsByUID(following.uid);
+            const products: [Product] = await getProductsByUID(following.uid);
 
             const productsWithImagesAndUser = await Promise.all(
               products.map(async (product) => {
@@ -129,7 +128,7 @@ export const getDashbord = async (
         )
       ).flatMap((products) => products || []); // Flatten and remove null entries
 
-      const myProducts = await getProductsByUID(uid);
+      const myProducts: [Product] = await getProductsByUID(uid);
       const productsWithImages = await Promise.all(
         myProducts.map(async (product) => {   
           const myRateDetails = await getUserProductByCodeForUID(product.code, uid);

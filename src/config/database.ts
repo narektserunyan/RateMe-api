@@ -1,13 +1,15 @@
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+const { Pool } = require('pg');
+require('dotenv').config();
 
-// Function to initialize and return a database connection
-export async function openDB() {
-    // Open the database
-    const db = await open({
-        filename: './database.db',
-        driver: sqlite3.Database
-    });
+const pool = new Pool({
+  host: process.env.PG_HOST,
+  port: process.env.PG_PORT,
+  user: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: process.env.PG_DATABASE,
+});
 
-    return db;
-}
+export const openDB = async () => {
+  const client = await pool.connect();
+  return client;
+};

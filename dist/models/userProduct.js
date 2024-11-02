@@ -19,18 +19,18 @@ const createUserProductConnectionTable = () => __awaiter(void 0, void 0, void 0,
             code INTEGER NOT NULL,
             description TEXT NOT NULL,
             rating REAL,
-            isPublic INTEGER DEFAULT 0,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP,  -- Automatically set the creation date
-            updated_at TEXT DEFAULT CURRENT_TIMESTAMP,  -- Automatically set the modification date
+            isPublic BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE
+            created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the creation date
+            updated_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the modification date
 
+            PRIMARY KEY (uid, code),
             FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE,
-            FOREIGN KEY (code) REFERENCES products(code) ON DELETE CASCADE,
-            PRIMARY KEY (uid, code)
+            FOREIGN KEY (code) REFERENCES products(code) ON DELETE CASCADE
         );
     `);
 });
 exports.createUserProductConnectionTable = createUserProductConnectionTable;
-const addUserProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, code, description, rating, isPublic }) {
+const addUserProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, code, description, rating, isPublic, }) {
     const db = yield (0, database_1.openDB)();
     yield db.run(`
         INSERT INTO user_products ( uid, code, description, rating, isPublic)
@@ -64,9 +64,4 @@ const getUserProductByCodeForUID = (code, uid) => __awaiter(void 0, void 0, void
     return userProduct;
 });
 exports.getUserProductByCodeForUID = getUserProductByCodeForUID;
-// export const getUserProductsForUID = async (uid: String) => {
-//   const db = await openDB();
-//   const userProduct = await db.get(`SELECT * FROM user_products WHERE uid = ?`, [uid]);
-//   return userProduct
-// };
 //# sourceMappingURL=userProduct.js.map
