@@ -16,3 +16,7 @@ export const openDB = async () => {
   const client = await pool.connect();
   return client;
 };
+
+pool.on('error', (error: Error) => {
+  console.error('Unexpected error on idle client', error);
+});
