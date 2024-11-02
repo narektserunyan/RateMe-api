@@ -20,6 +20,7 @@ const userFollower_1 = require("./models/userFollower");
 // Create an Express application
 const port = process.env.PORT || 3000;
 const init = () => __awaiter(void 0, void 0, void 0, function* () {
+    // await Drops();
     yield (0, user_1.createUsersTable)();
     yield (0, products_1.createProductsTable)();
     yield (0, userProduct_1.createUserProductConnectionTable)();

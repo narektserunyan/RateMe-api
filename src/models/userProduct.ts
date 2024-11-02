@@ -2,10 +2,10 @@ import { openDB } from '../config/database';
 
 export const createUserProductConnectionTable = async (): Promise<void> => {
   const db = await openDB();
-  await db.exec(`
+  await db.query(`
         CREATE TABLE IF NOT EXISTS user_products (
-            uid INTEGER NOT NULL,
-            code INTEGER NOT NULL,
+            uid TEXT NOT NULL,
+            code TEXT NOT NULL,
             description TEXT NOT NULL,
             rating REAL,
             isPublic BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE

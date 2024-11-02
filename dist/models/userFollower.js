@@ -13,10 +13,10 @@ exports.getFollowersForUID = exports.getFollowingsForUID = exports.addUsersFollo
 const database_1 = require("../config/database");
 const createUserFollowerTable = () => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
-    yield db.exec(`
+    yield db.query(`
         CREATE TABLE IF NOT EXISTS user_follower (
-            uid INTEGER NOT NULL,
-            uid_follower INTEGER NOT NULL,
+            uid TEXT NOT NULL,
+            uid_follower TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the creation date
 
             FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE,

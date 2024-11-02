@@ -2,7 +2,7 @@ import { openDB } from '../config/database';
 
 export const createUsersTable = async (): Promise<void> => {
   const db = await openDB();
-  await db.exec(`
+  await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         uid TEXT NOT NULL UNIQUE,
@@ -11,6 +11,16 @@ export const createUsersTable = async (): Promise<void> => {
         password TEXT NOT NULL,
         imagePath TEXT NOT NULL
       )
+    `);
+};
+
+export const Drops = async (): Promise<void> => {
+  const db = await openDB();
+  await db.query(`
+      DROP TABLE IF EXISTS user_follower;
+      DROP TABLE IF EXISTS user_products;
+      DROP TABLE IF EXISTS products;
+      DROP TABLE IF EXISTS users;
     `);
 };
 
@@ -28,8 +38,8 @@ export const insertUser = async ({
   password,
 }: User): Promise<void> => {
   const db = await openDB();
-  await db.run(
-    `INSERT INTO users (uid, email, password, name, imagePath) VALUES (?, ?, ?, ?, ?)`,
+  await db.query(
+    `INSERT INTO users (uid, email, password, name, imagePath) VALUES ($1, $2, $3, $4, $5)`,
     [uid, email, password, email, '']
   );
 };

@@ -13,10 +13,10 @@ exports.getUserProductByCodeForUID = exports.getProductByCodeForUID = exports.ge
 const database_1 = require("../config/database");
 const createUserProductConnectionTable = () => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
-    yield db.exec(`
+    yield db.query(`
         CREATE TABLE IF NOT EXISTS user_products (
-            uid INTEGER NOT NULL,
-            code INTEGER NOT NULL,
+            uid TEXT NOT NULL,
+            code TEXT NOT NULL,
             description TEXT NOT NULL,
             rating REAL,
             isPublic BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE

@@ -2,10 +2,10 @@ import { openDB } from '../config/database';
 
 export const createProductsTable = async (): Promise<void> => {
   const db = await openDB();
-  await db.exec(`
+  await db.query(`
       CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
-        code TEXT NOT NULL,
+        code TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
         imagePath TEXT NOT NULL,
         rating REAL

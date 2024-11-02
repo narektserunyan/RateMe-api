@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.findUsers = exports.insertUser = exports.createUsersTable = void 0;
+exports.getUser = exports.findUsers = exports.insertUser = exports.Drops = exports.createUsersTable = void 0;
 const database_1 = require("../config/database");
 const createUsersTable = () => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
-    yield db.exec(`
+    yield db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         uid TEXT NOT NULL UNIQUE,
@@ -25,6 +25,16 @@ const createUsersTable = () => __awaiter(void 0, void 0, void 0, function* () {
     `);
 });
 exports.createUsersTable = createUsersTable;
+const Drops = () => __awaiter(void 0, void 0, void 0, function* () {
+    const db = yield (0, database_1.openDB)();
+    yield db.query(`
+      DROP TABLE IF EXISTS user_follower;
+      DROP TABLE IF EXISTS user_products;
+      DROP TABLE IF EXISTS products;
+      DROP TABLE IF EXISTS users;
+    `);
+});
+exports.Drops = Drops;
 const insertUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, email, password, }) {
     const db = yield (0, database_1.openDB)();
     yield db.run(`INSERT INTO users (uid, email, password, name, imagePath) VALUES (?, ?, ?, ?, ?)`, [uid, email, password, email, '']);

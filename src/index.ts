@@ -1,5 +1,5 @@
 import app from './app';
-import { createUsersTable } from './models/user';
+import { createUsersTable, Drops } from './models/user';
 import { createProductsTable } from './models/products';
 import { createUserProductConnectionTable } from './models/userProduct';
 import { createUserFollowerTable } from './models/userFollower';
@@ -8,6 +8,7 @@ import { createUserFollowerTable } from './models/userFollower';
 const port = process.env.PORT || 3000;
 
 const init = async () => {
+  // await Drops();
   await createUsersTable();
   await createProductsTable();
   await createUserProductConnectionTable();
