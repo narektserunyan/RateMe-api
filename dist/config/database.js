@@ -15,7 +15,7 @@ require('dotenv').config();
 const pool = new Pool({
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
-    port: process.env.PG_PORT,
+    port: Number(process.env.PG_PORT),
     password: process.env.PG_PASSWORD,
     database: process.env.PG_DATABASE,
     ssl: {
@@ -27,4 +27,7 @@ const openDB = () => __awaiter(void 0, void 0, void 0, function* () {
     return client;
 });
 exports.openDB = openDB;
+pool.on('error', (error) => {
+    console.error('Unexpected error on idle client', error);
+});
 //# sourceMappingURL=database.js.map

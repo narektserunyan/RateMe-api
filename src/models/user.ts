@@ -61,10 +61,11 @@ export const findUsers = async (query: string, uid: string) => {
 
 export const getUser = async (uid: String): Promise<User> => {
   const db = await openDB();
-  const user = await db.get(
+  const user = await db.query(
     `
     SELECT email, name, imagePath 
-    FROM users WHERE uid = ?
+    FROM users 
+    WHERE uid = $1
     `,
     [uid]
   );
