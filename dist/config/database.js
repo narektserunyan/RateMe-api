@@ -27,7 +27,4 @@ const openDB = () => __awaiter(void 0, void 0, void 0, function* () {
     return client;
 });
 exports.openDB = openDB;
-pool.on('error', (error) => {
-    console.error('Unexpected error on idle client', error);
-});
 //# sourceMappingURL=database.js.map

@@ -69,5 +69,5 @@ export const getUser = async (uid: String): Promise<User> => {
     `,
     [uid]
   );
-  return user;
+  return user.rows[0] || null;
 };

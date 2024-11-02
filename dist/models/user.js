@@ -58,7 +58,7 @@ const getUser = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     FROM users 
     WHERE uid = $1
     `, [uid]);
-    return user;
+    return user.rows[0] || null;
 });
 exports.getUser = getUser;
 //# sourceMappingURL=user.js.map
