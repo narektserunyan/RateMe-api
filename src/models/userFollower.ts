@@ -25,7 +25,7 @@ export const addUsersFollower = async ({
   uid_follower,
 }: UserFollower): Promise<void> => {
     const db = await openDB();
-    await db.run(`
+    await db.query(`
       INSERT INTO user_follower (uid, uid_follower)
       VALUES ($1, $2)
       ON CONFLICT (uid, uid_follower) DO NOTHING  -- Prevents duplicate entries
@@ -34,20 +34,22 @@ export const addUsersFollower = async ({
  
 export const getFollowingsForUID = async (uid: string) => {
   const db = await openDB();
-    return db.all(`
+    const res = db.query(`
     SELECT users.email, users.name, users.uid, users.imagePath
     FROM users 
     INNER JOIN user_follower ON users.uid = user_follower.uid_follower 
     WHERE user_follower.uid = $1
   `, [uid]);
+  return res.rows || [];
 };
 
 export const getFollowersForUID = async (uid: string) => {
   const db = await openDB();
-    return db.all(`
+  const res = db.query(`
     SELECT users.email, users.uid, users.imagePath
     FROM users 
     INNER JOIN user_follower ON users.uid = user_follower.uid
     WHERE user_follower.uid_follower = $1
   `, [uid]);
+  return res.rows || [];
 };

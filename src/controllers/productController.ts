@@ -14,13 +14,14 @@ export const createProduct = async (
   res: Response
 ): Promise<void> => {
   const { uid, code, name, description, rating, isPublic } = req.body;
-  const file = req.file?.path;
-  const path = await uploadFileToDropbox(file!, true);
 
-  if (!code || !file || !uid || !rating) {
+  if (!code || !req.file || !uid || !rating) {
     res.status(400).json({ message: 'Code, file, uid, rating are required.' });
     return;
   }
+
+  const path = await uploadFileToDropbox(req.file, true);
+
   try {
     var product = await getProduct(code);
     if (!product) {
@@ -60,7 +61,7 @@ export const searchProduct = async (
       res.json({
         myRateDetails,
         name: globalProduct.name,
-        imagePath: globalProduct.imagePath,
+        imagePath: globalProduct.imagepath,
         rating: globalProduct.rating,
       });
     }

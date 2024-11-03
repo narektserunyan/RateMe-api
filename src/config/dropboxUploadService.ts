@@ -7,15 +7,15 @@ dotenv.config();
 // Initialize Dropbox client
 const dbx = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
 
-export async function uploadFileToDropbox(localFilePath: string, isProduct: boolean) {
+export async function uploadFileToDropbox(file: Express.Multer.File, isProduct: boolean) {
   try {
     // Get the base name of the file (e.g., 'image.jpg')
-    const fileName = path.basename(localFilePath);
+    const fileName = path.basename(file.originalname);
     const folderName = isProduct ? "ProductImages" : "UserProfileImages";
     // Full path in Dropbox
     const dropboxPath = `/${folderName}/${fileName}`;
     // Read the image file as a buffer
-    const fileContent = fs.readFileSync(localFilePath);
+    const fileContent = file.buffer;
 
     // Upload to Dropbox
     await dbx.filesUpload({

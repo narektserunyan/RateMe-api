@@ -14,14 +14,12 @@ const products_1 = require("../models/products");
 const userProduct_1 = require("../models/userProduct");
 const dropboxUploadService_1 = require("../config/dropboxUploadService");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     const { uid, code, name, description, rating, isPublic } = req.body;
-    const file = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
-    const path = yield (0, dropboxUploadService_1.uploadFileToDropbox)(file, true);
-    if (!code || !file || !uid || !rating) {
+    if (!code || !req.file || !uid || !rating) {
         res.status(400).json({ message: 'Code, file, uid, rating are required.' });
         return;
     }
+    const path = yield (0, dropboxUploadService_1.uploadFileToDropbox)(req.file, true);
     try {
         var product = yield (0, products_1.getProduct)(code);
         if (!product) {
@@ -59,7 +57,7 @@ const searchProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.json({
                 myRateDetails,
                 name: globalProduct.name,
-                imagePath: globalProduct.imagePath,
+                imagePath: globalProduct.imagepath,
                 rating: globalProduct.rating,
             });
         }

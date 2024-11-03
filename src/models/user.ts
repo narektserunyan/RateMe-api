@@ -48,15 +48,16 @@ export const findUsers = async (query: string, uid: string) => {
   const db = await openDB();
   const searchQuery = `%${query}%`; // Prepare the query for partial matching
 
-  return db.all(
+  const result = await db.query(
     `
       SELECT email, name, imagePath 
       FROM users
-      WHERE (name LIKE ? OR email LIKE ?)
-      AND uid != ?
+      WHERE (name ILIKE $1 OR email ILIKE $1)
+      AND uid != $2
   `,
-    [searchQuery, searchQuery, uid]
+  [searchQuery, uid]
   );
+  return result.rows; // Return the rows from the result
 };
 
 export const getUser = async (uid: String): Promise<User> => {

@@ -43,12 +43,13 @@ exports.insertUser = insertUser;
 const findUsers = (query, uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     const searchQuery = `%${query}%`; // Prepare the query for partial matching
-    return db.all(`
+    const result = yield db.query(`
       SELECT email, name, imagePath 
       FROM users
-      WHERE (name LIKE ? OR email LIKE ?)
-      AND uid != ?
-  `, [searchQuery, searchQuery, uid]);
+      WHERE (name ILIKE $1 OR email ILIKE $1)
+      AND uid != $2
+  `, [searchQuery, uid]);
+    return result.rows; // Return the rows from the result
 });
 exports.findUsers = findUsers;
 const getUser = (uid) => __awaiter(void 0, void 0, void 0, function* () {

@@ -35,10 +35,10 @@ export const addUserProduct = async ({
   isPublic,
 }: UserProduct): Promise<void> => {
   const db = await openDB();
-  await db.run(
+  await db.query(
     `
         INSERT INTO user_products ( uid, code, description, rating, isPublic)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES ($1, $2, $3, $4, $5)
     `,
     [uid, code, description, rating, isPublic]
   );
@@ -46,35 +46,37 @@ export const addUserProduct = async ({
 
 export const getProductsByUID = async (uid: String) => {
   const db = await openDB();
-  return db.all(
+  const result = await db.query(
     `
       SELECT products.* 
       FROM products 
       INNER JOIN user_products ON products.code = user_products.code 
-      WHERE user_products.uid = ?
+      WHERE user_products.uid = $1
     `,
     [uid]
   );
+  return result.rows;
 };
 
 export const getProductByCodeForUID = async (code: String, uid: String) => {
   const db = await openDB();
-  return db.get(
+  const res = await db.query(
     `
       SELECT products.* 
       FROM products 
       INNER JOIN user_products ON products.code = user_products.code 
-      WHERE user_products.uid = ? AND products.code = ?
+      WHERE user_products.uid = $1 AND products.code = $2
     `,
     [uid, code]
   );
+  return res.rows[0] || null;
 };
 
 export const getUserProductByCodeForUID = async (code: String, uid: String) => {
   const db = await openDB();
-  const userProduct = await db.get(
-    `SELECT * FROM user_products WHERE code = ? AND uid = ?`,
+  const res = await db.query(
+    `SELECT * FROM user_products WHERE code = $1 AND uid = $2`,
     [code, uid]
   );
-  return userProduct;
+  return res.rows[0] || null;
 };

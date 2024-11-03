@@ -20,16 +20,16 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 // Initialize Dropbox client
 const dbx = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
-function uploadFileToDropbox(localFilePath, isProduct) {
+function uploadFileToDropbox(file, isProduct) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Get the base name of the file (e.g., 'image.jpg')
-            const fileName = path.basename(localFilePath);
+            const fileName = path.basename(file.originalname);
             const folderName = isProduct ? "ProductImages" : "UserProfileImages";
             // Full path in Dropbox
             const dropboxPath = `/${folderName}/${fileName}`;
             // Read the image file as a buffer
-            const fileContent = fs.readFileSync(localFilePath);
+            const fileContent = file.buffer;
             // Upload to Dropbox
             yield dbx.filesUpload({
                 path: dropboxPath,

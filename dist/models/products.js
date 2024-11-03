@@ -26,13 +26,13 @@ const createProductsTable = () => __awaiter(void 0, void 0, void 0, function* ()
 exports.createProductsTable = createProductsTable;
 const insertProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ imagePath, code, name, rating, }) {
     const db = yield (0, database_1.openDB)();
-    yield db.run(`INSERT INTO products (imagePath, code, name, rating) VALUES (?, ?, ?, ?)`, [imagePath, code, name, rating]);
+    yield db.query(`INSERT INTO products (imagePath, code, name, rating) VALUES ($1, $2, $3, $4)`, [imagePath, code, name, rating]);
 });
 exports.insertProduct = insertProduct;
 const getProduct = (code) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
-    const product = yield db.get(`SELECT * FROM products WHERE code = ?`, [code]);
-    return product;
+    const res = yield db.query('SELECT * FROM products WHERE code = $1', [code]);
+    return res.rows[0] || null;
 });
 exports.getProduct = getProduct;
 //# sourceMappingURL=products.js.map

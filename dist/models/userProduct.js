@@ -32,36 +32,38 @@ const createUserProductConnectionTable = () => __awaiter(void 0, void 0, void 0,
 exports.createUserProductConnectionTable = createUserProductConnectionTable;
 const addUserProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, code, description, rating, isPublic, }) {
     const db = yield (0, database_1.openDB)();
-    yield db.run(`
+    yield db.query(`
         INSERT INTO user_products ( uid, code, description, rating, isPublic)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES ($1, $2, $3, $4, $5)
     `, [uid, code, description, rating, isPublic]);
 });
 exports.addUserProduct = addUserProduct;
 const getProductsByUID = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
-    return db.all(`
+    const result = yield db.query(`
       SELECT products.* 
       FROM products 
       INNER JOIN user_products ON products.code = user_products.code 
-      WHERE user_products.uid = ?
+      WHERE user_products.uid = $1
     `, [uid]);
+    return result.rows;
 });
 exports.getProductsByUID = getProductsByUID;
 const getProductByCodeForUID = (code, uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
-    return db.get(`
+    const res = yield db.query(`
       SELECT products.* 
       FROM products 
       INNER JOIN user_products ON products.code = user_products.code 
-      WHERE user_products.uid = ? AND products.code = ?
+      WHERE user_products.uid = $1 AND products.code = $2
     `, [uid, code]);
+    return res.rows[0] || null;
 });
 exports.getProductByCodeForUID = getProductByCodeForUID;
 const getUserProductByCodeForUID = (code, uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
-    const userProduct = yield db.get(`SELECT * FROM user_products WHERE code = ? AND uid = ?`, [code, uid]);
-    return userProduct;
+    const res = yield db.query(`SELECT * FROM user_products WHERE code = $1 AND uid = $2`, [code, uid]);
+    return res.rows[0] || null;
 });
 exports.getUserProductByCodeForUID = getUserProductByCodeForUID;
 //# sourceMappingURL=userProduct.js.map
