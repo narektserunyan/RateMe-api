@@ -5,11 +5,11 @@ export const createUsersTable = async (): Promise<void> => {
   await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
-        uid TEXT NOT NULL UNIQUE,
-        email TEXT NOT NULL UNIQUE,
-        name TEXT NOT NULL,
-        password TEXT NOT NULL,
-        image_url TEXT NOT NULL
+        uid VARCHAR(36) NOT NULL UNIQUE,
+        email VARCHAR(30) NOT NULL UNIQUE,
+        name VARCHAR(20) NOT NULL,
+        password VARCHAR(16) NOT NULL,
+        image_url VARCHAR(150) NOT NULL
       )
     `);
 };

@@ -4,8 +4,8 @@ export const createUserFollowerTable = async (): Promise<void> => {
   const db = await openDB();
   await db.query(`
         CREATE TABLE IF NOT EXISTS user_follower (
-            uid TEXT NOT NULL,
-            uid_follower TEXT NOT NULL,
+            uid VARCHAR(36) NOT NULL,
+            uid_follower VARCHAR(36) NOT NULL,
             created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the creation date
 
             FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE,

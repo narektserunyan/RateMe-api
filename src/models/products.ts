@@ -5,9 +5,9 @@ export const createProductsTable = async (): Promise<void> => {
   await db.query(`
       CREATE TABLE IF NOT EXISTS products (
         id SERIAL PRIMARY KEY,
-        code TEXT NOT NULL UNIQUE,
-        name TEXT NOT NULL,
-        image_url TEXT NOT NULL,
+        code VARCHAR(36) NOT NULL UNIQUE,
+        name VARCHAR(20) NOT NULL,
+        image_url VARCHAR(150) NOT NULL,
         rating REAL
       )
     `);

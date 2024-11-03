@@ -4,9 +4,9 @@ export const createUserProductConnectionTable = async (): Promise<void> => {
   const db = await openDB();
   await db.query(`
         CREATE TABLE IF NOT EXISTS user_products (
-            uid TEXT NOT NULL,
-            code TEXT NOT NULL,
-            description TEXT NOT NULL,
+            uid VARCHAR(36) NOT NULL,
+            code VARCHAR(36) NOT NULL,
+            description VARCHAR(150) NOT NULL,
             rating REAL,
             is_public BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE
             created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the creation date
