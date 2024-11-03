@@ -20,7 +20,7 @@ const createUsersTable = () => __awaiter(void 0, void 0, void 0, function* () {
         email TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
         password TEXT NOT NULL,
-        imagePath TEXT NOT NULL
+        image_url TEXT NOT NULL
       )
     `);
 });
@@ -35,27 +35,27 @@ const Drops = () => __awaiter(void 0, void 0, void 0, function* () {
     `);
 });
 exports.Drops = Drops;
-const insertUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, email, password, }) {
+const insertUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, email, password }) {
     const db = yield (0, database_1.openDB)();
-    yield db.query(`INSERT INTO users (uid, email, password, name, imagePath) VALUES ($1, $2, $3, $4, $5)`, [uid, email, password, email, '']);
+    yield db.query(`INSERT INTO users (uid, email, password, name, image_url) VALUES ($1, $2, $3, $4, $5)`, [uid, email, password, email, '']);
 });
 exports.insertUser = insertUser;
 const findUsers = (query, uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     const searchQuery = `%${query}%`; // Prepare the query for partial matching
     const result = yield db.query(`
-      SELECT email, name, imagePath 
+      SELECT email, name, image_url 
       FROM users
       WHERE (name ILIKE $1 OR email ILIKE $1)
       AND uid != $2
   `, [searchQuery, uid]);
-    return result.rows; // Return the rows from the result
+    return result.rows;
 });
 exports.findUsers = findUsers;
 const getUser = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     const user = yield db.query(`
-    SELECT email, name, imagePath 
+    SELECT email, name, image_url 
     FROM users 
     WHERE uid = $1
     `, [uid]);

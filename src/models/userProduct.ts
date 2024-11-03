@@ -8,7 +8,7 @@ export const createUserProductConnectionTable = async (): Promise<void> => {
             code TEXT NOT NULL,
             description TEXT NOT NULL,
             rating REAL,
-            isPublic BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE
+            is_public BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE
             created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the creation date
             updated_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the modification date
 
@@ -19,12 +19,13 @@ export const createUserProductConnectionTable = async (): Promise<void> => {
     `);
 };
 
-interface UserProduct {
+export interface UserProduct {
   uid: string;
   code: string;
   description: string;
   rating: number;
-  isPublic: number;
+  is_public: number;
+  updated_at: string;
 }
 
 export const addUserProduct = async ({
@@ -32,15 +33,15 @@ export const addUserProduct = async ({
   code,
   description,
   rating,
-  isPublic,
+  is_public,
 }: UserProduct): Promise<void> => {
   const db = await openDB();
   await db.query(
     `
-        INSERT INTO user_products ( uid, code, description, rating, isPublic)
+        INSERT INTO user_products ( uid, code, description, rating, is_public)
         VALUES ($1, $2, $3, $4, $5)
     `,
-    [uid, code, description, rating, isPublic]
+    [uid, code, description, rating, is_public]
   );
 };
 

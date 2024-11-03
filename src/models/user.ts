@@ -9,7 +9,7 @@ export const createUsersTable = async (): Promise<void> => {
         email TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
         password TEXT NOT NULL,
-        imagePath TEXT NOT NULL
+        image_url TEXT NOT NULL
       )
     `);
 };
@@ -29,42 +29,41 @@ export interface User {
   email: string;
   name: string;
   password: number;
-  imagePath: string;
+  image_url: string;
 }
 
-export const insertUser = async ({
-  uid,
-  email,
-  password,
-}: User): Promise<void> => {
+export const insertUser = async ({ uid, email, password }: User) => {
   const db = await openDB();
   await db.query(
-    `INSERT INTO users (uid, email, password, name, imagePath) VALUES ($1, $2, $3, $4, $5)`,
+    `INSERT INTO users (uid, email, password, name, image_url) VALUES ($1, $2, $3, $4, $5)`,
     [uid, email, password, email, '']
   );
 };
 
-export const findUsers = async (query: string, uid: string) => {
+export const findUsers = async (
+  query: string,
+  uid: string
+): Promise<[User]> => {
   const db = await openDB();
   const searchQuery = `%${query}%`; // Prepare the query for partial matching
 
   const result = await db.query(
     `
-      SELECT email, name, imagePath 
+      SELECT email, name, image_url 
       FROM users
       WHERE (name ILIKE $1 OR email ILIKE $1)
       AND uid != $2
   `,
-  [searchQuery, uid]
+    [searchQuery, uid]
   );
-  return result.rows; // Return the rows from the result
+  return result.rows;
 };
 
 export const getUser = async (uid: String): Promise<User> => {
   const db = await openDB();
   const user = await db.query(
     `
-    SELECT email, name, imagePath 
+    SELECT email, name, image_url 
     FROM users 
     WHERE uid = $1
     `,

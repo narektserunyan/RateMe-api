@@ -18,15 +18,15 @@ const createProductsTable = () => __awaiter(void 0, void 0, void 0, function* ()
         id SERIAL PRIMARY KEY,
         code TEXT NOT NULL UNIQUE,
         name TEXT NOT NULL,
-        imagePath TEXT NOT NULL,
+        image_url TEXT NOT NULL,
         rating REAL
       )
     `);
 });
 exports.createProductsTable = createProductsTable;
-const insertProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ imagePath, code, name, rating, }) {
+const insertProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ image_url, code, name, rating, }) {
     const db = yield (0, database_1.openDB)();
-    yield db.query(`INSERT INTO products (imagePath, code, name, rating) VALUES ($1, $2, $3, $4)`, [imagePath, code, name, rating]);
+    yield db.query(`INSERT INTO products (image_url, code, name, rating) VALUES ($1, $2, $3, $4)`, [image_url, code, name, rating]);
 });
 exports.insertProduct = insertProduct;
 const getProduct = (code) => __awaiter(void 0, void 0, void 0, function* () {

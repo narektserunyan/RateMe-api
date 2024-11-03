@@ -14,9 +14,7 @@ const userProduct_1 = require("../models/userProduct");
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { uid } = req.body;
     if (!uid) {
-        res
-            .status(400)
-            .json({ message: 'user UID is required.' });
+        res.status(400).json({ message: 'user UID is required.' });
         return;
     }
     try {

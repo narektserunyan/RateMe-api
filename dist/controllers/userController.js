@@ -32,7 +32,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 email: email,
                 password: password,
                 name: '',
-                imagePath: '',
+                image_url: '',
             });
             res.status(200).json({ message: 'User is created' });
         }
@@ -50,20 +50,19 @@ const getProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     try {
         const user = yield (0, user_1.getUser)(uid);
-        if (user) {
-            const following = yield (0, userFollower_1.getFollowingsForUID)(uid);
-            const followers = yield (0, userFollower_1.getFollowersForUID)(uid);
-            const products = yield (0, userProduct_1.getProductsByUID)(uid);
-            res.json({
-                user: user,
-                followers: followers,
-                following: following,
-                products: products,
-            });
-        }
-        else {
+        if (!user) {
             res.status(400).json({ message: 'user not found' });
+            return;
         }
+        const following = yield (0, userFollower_1.getFollowingsForUID)(uid);
+        const followers = yield (0, userFollower_1.getFollowersForUID)(uid);
+        const products = yield (0, userProduct_1.getProductsByUID)(uid);
+        res.json({
+            user: user,
+            followers: followers,
+            following: following,
+            products: products,
+        });
     }
     catch (error) {
         res.status(500).json({ message: 'Error registering user', error });
@@ -93,32 +92,29 @@ const getDashbord = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     try {
         const user = yield (0, user_1.getUser)(uid);
-        if (user) {
-            const followings = yield (0, userFollower_1.getFollowingsForUID)(uid);
-            const productsOfFollowings = (yield Promise.all(followings.map((following) => __awaiter(void 0, void 0, void 0, function* () {
-                const products = yield (0, userProduct_1.getProductsByUID)(following.uid);
-                const productsWithImagesAndUser = yield Promise.all(products.map((product) => __awaiter(void 0, void 0, void 0, function* () {
-                    const myRateDetails = yield (0, userProduct_1.getUserProductByCodeForUID)(product.code, following.uid);
-                    if (myRateDetails.isPublic === 0) {
-                        return null;
-                    }
-                    return Object.assign(Object.assign({}, product), { imageOfOwner: following.imagePath, nameOfOwner: following.name, ownerRating: myRateDetails.rating, updatedAt: myRateDetails.updatedAt, description: myRateDetails.description });
-                }))).then(results => results.filter(product => product !== null));
-                return products.length
-                    ? productsWithImagesAndUser
-                    : null; // Return null if no products
-            })))).flatMap((products) => products || []); // Flatten and remove null entries
-            const myProducts = yield (0, userProduct_1.getProductsByUID)(uid);
-            const productsWithImages = yield Promise.all(myProducts.map((product) => __awaiter(void 0, void 0, void 0, function* () {
-                const myRateDetails = yield (0, userProduct_1.getUserProductByCodeForUID)(product.code, uid);
-                return Object.assign(Object.assign({}, product), { imageOfOwner: user.imagePath, nameOfOwner: user.name, ownerRating: myRateDetails.rating, updatedAt: myRateDetails.updatedAt, description: myRateDetails.description });
-            })));
-            const products = productsOfFollowings.concat(productsWithImages);
-            res.json(products);
-        }
-        else {
+        if (!user) {
             res.status(400).json({ message: 'user not found' });
+            return;
         }
+        const followings = yield (0, userFollower_1.getFollowingsForUID)(uid);
+        const productsOfFollowings = (yield Promise.all(followings.map((following) => __awaiter(void 0, void 0, void 0, function* () {
+            const products = yield (0, userProduct_1.getProductsByUID)(following.uid);
+            const productsWithImagesAndUser = yield Promise.all(products.map((product) => __awaiter(void 0, void 0, void 0, function* () {
+                const myRateDetails = yield (0, userProduct_1.getUserProductByCodeForUID)(product.code, following.uid);
+                if (myRateDetails.is_public === 0) {
+                    return null;
+                }
+                return Object.assign(Object.assign({}, product), { imageOfOwner: following.image_url, nameOfOwner: following.name, ownerRating: myRateDetails.rating, updatedAt: myRateDetails.updated_at, description: myRateDetails.description });
+            }))).then((results) => results.filter((product) => product !== null));
+            return products.length ? productsWithImagesAndUser : null; // Return null if no products
+        })))).flatMap((products) => products || []); // Flatten and remove null entries
+        const myProducts = yield (0, userProduct_1.getProductsByUID)(uid);
+        const productsWithImages = yield Promise.all(myProducts.map((product) => __awaiter(void 0, void 0, void 0, function* () {
+            const myRateDetails = yield (0, userProduct_1.getUserProductByCodeForUID)(product.code, uid);
+            return Object.assign(Object.assign({}, product), { imageOfOwner: user.image_url, nameOfOwner: user.name, ownerRating: myRateDetails.rating, updatedAt: myRateDetails.updated_at, description: myRateDetails.description });
+        })));
+        const products = productsOfFollowings.concat(productsWithImages);
+        res.json(products);
     }
     catch (error) {
         res.status(500).json({ message: 'Error registering user', error });

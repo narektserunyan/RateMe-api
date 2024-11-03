@@ -1,19 +1,16 @@
 import { Request, Response } from 'express';
-import { getProduct, insertProduct } from '../models/products';
+import { getProduct, insertProduct, Product } from '../models/products';
 import {
   addUserProduct,
   getProductByCodeForUID,
   getProductsByUID,
   getUserProductByCodeForUID,
+  UserProduct,
 } from '../models/userProduct';
 import { uploadFileToDropbox } from '../config/dropboxUploadService';
 
-
-export const createProduct = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const { uid, code, name, description, rating, isPublic } = req.body;
+export const createProduct = async (req: Request, res: Response) => {
+  const { uid, code, name, description, rating, is_public } = req.body;
 
   if (!code || !req.file || !uid || !rating) {
     res.status(400).json({ message: 'Code, file, uid, rating are required.' });
@@ -23,18 +20,26 @@ export const createProduct = async (
   const path = await uploadFileToDropbox(req.file, true);
 
   try {
-    var product = await getProduct(code);
+    var product: Product = await getProduct(code);
     if (!product) {
       await insertProduct({
-        imagePath: path,
+        image_url: path,
         code: code,
         name: name,
         rating: rating,
       });
     }
-    await addUserProduct({ uid, code, description, rating, isPublic });
+    const updated_at = '';
+    await addUserProduct({
+      uid,
+      code,
+      description,
+      rating,
+      is_public,
+      updated_at,
+    });
 
-    const products = await getProductsByUID(uid);
+    const products: [Product] = await getProductsByUID(uid);
     res.json(products);
   } catch (error) {
     console.error(error);
@@ -42,26 +47,26 @@ export const createProduct = async (
   }
 };
 
-export const searchProduct = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const searchProduct = async (req: Request, res: Response) => {
   const { code, uid } = req.body;
   if (!code || !uid) {
     res.status(400).json({ message: 'code and uid are required.' });
     return;
   }
   try {
-    const globalProduct = await getProductByCodeForUID(code, uid);
+    const globalProduct: Product = await getProductByCodeForUID(code, uid);
     if (!globalProduct) {
-      const product = await getProduct(code);
+      const product: Product = await getProduct(code);
       res.json(product);
     } else {
-      const myRateDetails = await getUserProductByCodeForUID(code, uid);
+      const myRateDetails: UserProduct = await getUserProductByCodeForUID(
+        code,
+        uid
+      );
       res.json({
         myRateDetails,
         name: globalProduct.name,
-        imagePath: globalProduct.imagepath,
+        image_url: globalProduct.image_url,
         rating: globalProduct.rating,
       });
     }

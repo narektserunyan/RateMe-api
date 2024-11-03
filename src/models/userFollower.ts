@@ -35,7 +35,7 @@ export const addUsersFollower = async ({
 export const getFollowingsForUID = async (uid: string) => {
   const db = await openDB();
     const res = db.query(`
-    SELECT users.email, users.name, users.uid, users.imagePath
+    SELECT users.email, users.name, users.uid, users.image_url
     FROM users 
     INNER JOIN user_follower ON users.uid = user_follower.uid_follower 
     WHERE user_follower.uid = $1
@@ -46,7 +46,7 @@ export const getFollowingsForUID = async (uid: string) => {
 export const getFollowersForUID = async (uid: string) => {
   const db = await openDB();
   const res = db.query(`
-    SELECT users.email, users.uid, users.imagePath
+    SELECT users.email, users.uid, users.image_url
     FROM users 
     INNER JOIN user_follower ON users.uid = user_follower.uid
     WHERE user_follower.uid_follower = $1

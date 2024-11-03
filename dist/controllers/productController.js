@@ -14,7 +14,7 @@ const products_1 = require("../models/products");
 const userProduct_1 = require("../models/userProduct");
 const dropboxUploadService_1 = require("../config/dropboxUploadService");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { uid, code, name, description, rating, isPublic } = req.body;
+    const { uid, code, name, description, rating, is_public } = req.body;
     if (!code || !req.file || !uid || !rating) {
         res.status(400).json({ message: 'Code, file, uid, rating are required.' });
         return;
@@ -24,13 +24,21 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         var product = yield (0, products_1.getProduct)(code);
         if (!product) {
             yield (0, products_1.insertProduct)({
-                imagePath: path,
+                image_url: path,
                 code: code,
                 name: name,
                 rating: rating,
             });
         }
-        yield (0, userProduct_1.addUserProduct)({ uid, code, description, rating, isPublic });
+        const updated_at = '';
+        yield (0, userProduct_1.addUserProduct)({
+            uid,
+            code,
+            description,
+            rating,
+            is_public,
+            updated_at,
+        });
         const products = yield (0, userProduct_1.getProductsByUID)(uid);
         res.json(products);
     }
@@ -57,7 +65,7 @@ const searchProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             res.json({
                 myRateDetails,
                 name: globalProduct.name,
-                imagePath: globalProduct.imagepath,
+                image_url: globalProduct.image_url,
                 rating: globalProduct.rating,
             });
         }

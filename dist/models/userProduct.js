@@ -19,7 +19,7 @@ const createUserProductConnectionTable = () => __awaiter(void 0, void 0, void 0,
             code TEXT NOT NULL,
             description TEXT NOT NULL,
             rating REAL,
-            isPublic BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE
+            is_public BOOLEAN DEFAULT FALSE,  -- BOOLEAN with default value FALSE
             created_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the creation date
             updated_at TIMESTAMP DEFAULT NOW(),  -- Automatically set the modification date
 
@@ -30,12 +30,12 @@ const createUserProductConnectionTable = () => __awaiter(void 0, void 0, void 0,
     `);
 });
 exports.createUserProductConnectionTable = createUserProductConnectionTable;
-const addUserProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, code, description, rating, isPublic, }) {
+const addUserProduct = (_a) => __awaiter(void 0, [_a], void 0, function* ({ uid, code, description, rating, is_public, }) {
     const db = yield (0, database_1.openDB)();
     yield db.query(`
-        INSERT INTO user_products ( uid, code, description, rating, isPublic)
+        INSERT INTO user_products ( uid, code, description, rating, is_public)
         VALUES ($1, $2, $3, $4, $5)
-    `, [uid, code, description, rating, isPublic]);
+    `, [uid, code, description, rating, is_public]);
 });
 exports.addUserProduct = addUserProduct;
 const getProductsByUID = (uid) => __awaiter(void 0, void 0, void 0, function* () {

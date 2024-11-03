@@ -38,7 +38,7 @@ exports.addUsersFollower = addUsersFollower;
 const getFollowingsForUID = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     const res = db.query(`
-    SELECT users.email, users.name, users.uid, users.imagePath
+    SELECT users.email, users.name, users.uid, users.image_url
     FROM users 
     INNER JOIN user_follower ON users.uid = user_follower.uid_follower 
     WHERE user_follower.uid = $1
@@ -49,7 +49,7 @@ exports.getFollowingsForUID = getFollowingsForUID;
 const getFollowersForUID = (uid) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield (0, database_1.openDB)();
     const res = db.query(`
-    SELECT users.email, users.uid, users.imagePath
+    SELECT users.email, users.uid, users.image_url
     FROM users 
     INNER JOIN user_follower ON users.uid = user_follower.uid
     WHERE user_follower.uid_follower = $1
