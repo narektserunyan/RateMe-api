@@ -7,7 +7,7 @@ export const createUsersTable = async (): Promise<void> => {
         id SERIAL PRIMARY KEY,
         uid VARCHAR(36) NOT NULL UNIQUE,
         email VARCHAR(30) NOT NULL UNIQUE,
-        name VARCHAR(20) NOT NULL,
+        name VARCHAR(30) NOT NULL,
         password VARCHAR(16) NOT NULL,
         image_url VARCHAR(150) NOT NULL
       )
